@@ -1,4 +1,5 @@
 FROM alpine
-EXPOSE 8080
-COPY restfulapi /usr/bin/restfulapi
-ENTRYPOINT ["/usr/bin/restfulapi"]
+EXPOSE 50051
+COPY grpc-qs grpc-qs
+COPY . .
+ENTRYPOINT ["/grpc-qs"]
