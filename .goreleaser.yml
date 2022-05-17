@@ -23,6 +23,7 @@ dockers:
   - --label=org.opencontainers.image.licenses=MIT
   extra_files:
     - helloworld
+    - healthchecker
 - image_templates: ["ghcr.io/patricklaabs/{{ .ProjectName }}:{{ .Version }}-arm64v8"]
   goarch: arm64
   dockerfile: Dockerfile
@@ -39,6 +40,7 @@ dockers:
   - --label=org.opencontainers.image.licenses=MIT
   extra_files:
     - helloworld
+    - healthchecker
 docker_manifests:
 - name_template: ghcr.io/patricklaabs/{{ .ProjectName }}:{{ .Version }}
   image_templates:

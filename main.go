@@ -23,11 +23,13 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"log"
-	"net"
-
+	"github.com/PatrickLaabs/grpc-qs/healthchecker"
+	_ "github.com/PatrickLaabs/grpc-qs/healthchecker"
 	pb "github.com/PatrickLaabs/grpc-qs/helloworld"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health/grpc_health_v1"
+	"log"
+	"net"
 )
 
 var (
@@ -57,6 +59,10 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
+
+	healthService := healthchecker.HealthChecker{}
+	grpc_health_v1.RegisterHealthServer(s, &healthService)
+
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
