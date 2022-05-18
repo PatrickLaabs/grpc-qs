@@ -39,12 +39,19 @@ var (
 // server is used to implement helloworld.GreeterServer.
 type server struct {
 	pb.UnimplementedGreeterServer
+	pb.UnimplementedByeServer
 }
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
 	log.Printf("Received: %v", in.GetName())
 	return &pb.HelloReply{Message: "Hello " + in.GetName()}, nil
+}
+
+// SayBye implements helloworld.ByeServer
+func (s *server) SayBye(ctx context.Context, in *pb.ByeRequest) (*pb.ByeReply, error) {
+	log.Printf("Received: %v", in.GetName())
+	return &pb.ByeReply{Message: "Bye " + in.GetName()}, nil
 }
 
 func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
@@ -59,6 +66,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
+	pb.RegisterByeServer(s, &server{})
 
 	healthService := healthchecker.HealthChecker{}
 	grpc_health_v1.RegisterHealthServer(s, &healthService)

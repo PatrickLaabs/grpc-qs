@@ -143,3 +143,91 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "helloworld/helloworld.proto",
 }
+
+// ByeClient is the client API for Bye service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ByeClient interface {
+	// sends bye message
+	SayBye(ctx context.Context, in *ByeRequest, opts ...grpc.CallOption) (*ByeReply, error)
+}
+
+type byeClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewByeClient(cc grpc.ClientConnInterface) ByeClient {
+	return &byeClient{cc}
+}
+
+func (c *byeClient) SayBye(ctx context.Context, in *ByeRequest, opts ...grpc.CallOption) (*ByeReply, error) {
+	out := new(ByeReply)
+	err := c.cc.Invoke(ctx, "/helloworld.Bye/SayBye", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ByeServer is the server API for Bye service.
+// All implementations must embed UnimplementedByeServer
+// for forward compatibility
+type ByeServer interface {
+	// sends bye message
+	SayBye(context.Context, *ByeRequest) (*ByeReply, error)
+	mustEmbedUnimplementedByeServer()
+}
+
+// UnimplementedByeServer must be embedded to have forward compatible implementations.
+type UnimplementedByeServer struct {
+}
+
+func (UnimplementedByeServer) SayBye(context.Context, *ByeRequest) (*ByeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SayBye not implemented")
+}
+func (UnimplementedByeServer) mustEmbedUnimplementedByeServer() {}
+
+// UnsafeByeServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ByeServer will
+// result in compilation errors.
+type UnsafeByeServer interface {
+	mustEmbedUnimplementedByeServer()
+}
+
+func RegisterByeServer(s grpc.ServiceRegistrar, srv ByeServer) {
+	s.RegisterService(&Bye_ServiceDesc, srv)
+}
+
+func _Bye_SayBye_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ByeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ByeServer).SayBye(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/helloworld.Bye/SayBye",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ByeServer).SayBye(ctx, req.(*ByeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Bye_ServiceDesc is the grpc.ServiceDesc for Bye service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Bye_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "helloworld.Bye",
+	HandlerType: (*ByeServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SayBye",
+			Handler:    _Bye_SayBye_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "helloworld/helloworld.proto",
+}
