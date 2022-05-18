@@ -38,3 +38,19 @@ message HelloRequest {
 message HelloReply {
   string message = 1;
 }
+
+// New Service Bye
+service Bye {
+  // sends bye message
+  rpc SayBye (ByeRequest) returns (ByeReply) {}
+}
+
+// Request Message for the Bye-Service
+message ByeRequest {
+  string name = 1;
+}
+
+// Reply Message for the Bye-Service
+message ByeReply {
+  string message = 1;
+}

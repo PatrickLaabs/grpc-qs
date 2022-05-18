@@ -63,4 +63,15 @@ func main() {
 		log.Fatalf("could not greet: %v", err)
 	}
 	log.Printf("Greeting: %s", r.GetMessage())
+
+	// Trying new service implementation
+	d := pb.NewByeClient(conn)
+
+	ctx2, cancel2 := context.WithTimeout(context.Background(), time.Second)
+	defer cancel2()
+	t, err := d.SayBye(ctx2, &pb.ByeRequest{Name: *name})
+	if err != nil {
+		log.Fatalf("could not send bye: %v", err)
+	}
+	log.Printf("Bye: %s", t.GetMessage())
 }
