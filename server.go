@@ -60,18 +60,13 @@ func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.He
 	return &pb.HelloReply{Message: "Hello again " + in.GetName()}, nil
 }
 
-//  func (s *server) SendVersion(ctx context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
-//	return &pb.VersionReply{Message: "Current gRPC Server Version: " + in.GetVersion()}, nil
-//}
-
 // SendVersion func
 func (s *server) SendVersion(ctx context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
-	f, err := os.ReadFile("./serverVersion.params")
+	f, err := os.ReadFile("./.VERSION")
 	if err != nil {
 		log.Fatal("could not open param file", err)
 	}
 	return &pb.VersionReply{Message: "Current gRPC Server Version: " + string(f)}, nil
-	//return &pb.VersionReply{Message: "SrvVersion: "}, nil
 }
 
 func main() {
