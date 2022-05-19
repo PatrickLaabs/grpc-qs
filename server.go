@@ -62,7 +62,7 @@ func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.He
 
 // SendVersion func
 func (s *server) SendVersion(ctx context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
-	f, err := os.ReadFile("./.VERSION")
+	f, err := os.ReadFile("./serverVersion.params")
 	if err != nil {
 		log.Fatal("could not open param file", err)
 	}
