@@ -24,7 +24,9 @@ import (
 	"flag"
 	"fmt"
 	"github.com/PatrickLaabs/grpc-qs/healthchecker"
-	_ "github.com/PatrickLaabs/grpc-qs/healthchecker"
+	"os"
+
+	//_ "github.com/PatrickLaabs/grpc-qs/healthchecker"
 	pb "github.com/PatrickLaabs/grpc-qs/helloworld"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
@@ -58,6 +60,20 @@ func (s *server) SayHelloAgain(ctx context.Context, in *pb.HelloRequest) (*pb.He
 	return &pb.HelloReply{Message: "Hello again " + in.GetName()}, nil
 }
 
+//  func (s *server) SendVersion(ctx context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
+//	return &pb.VersionReply{Message: "Current gRPC Server Version: " + in.GetVersion()}, nil
+//}
+
+// SendVersion func
+func (s *server) SendVersion(ctx context.Context, in *pb.VersionRequest) (*pb.VersionReply, error) {
+	f, err := os.ReadFile("./serverVersion.params")
+	if err != nil {
+		log.Fatal("could not open param file", err)
+	}
+	return &pb.VersionReply{Message: "Current gRPC Server Version: " + string(f)}, nil
+	//return &pb.VersionReply{Message: "SrvVersion: "}, nil
+}
+
 func main() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
@@ -67,6 +83,7 @@ func main() {
 	s := grpc.NewServer()
 	pb.RegisterGreeterServer(s, &server{})
 	pb.RegisterByeServer(s, &server{})
+	pb.RegisterVersionServer(s, &server{})
 
 	healthService := healthchecker.HealthChecker{}
 	grpc_health_v1.RegisterHealthServer(s, &healthService)
