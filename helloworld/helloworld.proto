@@ -54,3 +54,18 @@ message ByeRequest {
 message ByeReply {
   string message = 1;
 }
+
+// Version Service to message the current gRPC Server Version
+service Version {
+  rpc SendVersion (VersionRequest) returns (VersionReply) {}
+}
+
+// Messsage for Version Request
+message VersionRequest {
+  string version = 1;
+}
+
+// Message for Version Reply to the Requester
+message VersionReply {
+  string message = 1;
+}

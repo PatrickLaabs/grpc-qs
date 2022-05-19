@@ -55,17 +55,16 @@ func (c *greeterClient) SayHelloAgain(ctx context.Context, in *HelloRequest, opt
 }
 
 // GreeterServer is the server API for Greeter service.
-// All implementations must embed UnimplementedGreeterServer
+// All implementations should embed UnimplementedGreeterServer
 // for forward compatibility
 type GreeterServer interface {
 	// Sends a greeting
 	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
 	// Sends another greeting
 	SayHelloAgain(context.Context, *HelloRequest) (*HelloReply, error)
-	mustEmbedUnimplementedGreeterServer()
 }
 
-// UnimplementedGreeterServer must be embedded to have forward compatible implementations.
+// UnimplementedGreeterServer should be embedded to have forward compatible implementations.
 type UnimplementedGreeterServer struct {
 }
 
@@ -75,7 +74,6 @@ func (UnimplementedGreeterServer) SayHello(context.Context, *HelloRequest) (*Hel
 func (UnimplementedGreeterServer) SayHelloAgain(context.Context, *HelloRequest) (*HelloReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayHelloAgain not implemented")
 }
-func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 
 // UnsafeGreeterServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to GreeterServer will
@@ -170,22 +168,20 @@ func (c *byeClient) SayBye(ctx context.Context, in *ByeRequest, opts ...grpc.Cal
 }
 
 // ByeServer is the server API for Bye service.
-// All implementations must embed UnimplementedByeServer
+// All implementations should embed UnimplementedByeServer
 // for forward compatibility
 type ByeServer interface {
 	// sends bye message
 	SayBye(context.Context, *ByeRequest) (*ByeReply, error)
-	mustEmbedUnimplementedByeServer()
 }
 
-// UnimplementedByeServer must be embedded to have forward compatible implementations.
+// UnimplementedByeServer should be embedded to have forward compatible implementations.
 type UnimplementedByeServer struct {
 }
 
 func (UnimplementedByeServer) SayBye(context.Context, *ByeRequest) (*ByeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SayBye not implemented")
 }
-func (UnimplementedByeServer) mustEmbedUnimplementedByeServer() {}
 
 // UnsafeByeServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to ByeServer will
@@ -226,6 +222,90 @@ var Bye_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SayBye",
 			Handler:    _Bye_SayBye_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "helloworld/helloworld.proto",
+}
+
+// VersionClient is the client API for Version service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type VersionClient interface {
+	SendVersion(ctx context.Context, in *VersionRequest, opts ...grpc.CallOption) (*VersionReply, error)
+}
+
+type versionClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewVersionClient(cc grpc.ClientConnInterface) VersionClient {
+	return &versionClient{cc}
+}
+
+func (c *versionClient) SendVersion(ctx context.Context, in *VersionRequest, opts ...grpc.CallOption) (*VersionReply, error) {
+	out := new(VersionReply)
+	err := c.cc.Invoke(ctx, "/helloworld.Version/SendVersion", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// VersionServer is the server API for Version service.
+// All implementations should embed UnimplementedVersionServer
+// for forward compatibility
+type VersionServer interface {
+	SendVersion(context.Context, *VersionRequest) (*VersionReply, error)
+}
+
+// UnimplementedVersionServer should be embedded to have forward compatible implementations.
+type UnimplementedVersionServer struct {
+}
+
+func (UnimplementedVersionServer) SendVersion(context.Context, *VersionRequest) (*VersionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendVersion not implemented")
+}
+
+// UnsafeVersionServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to VersionServer will
+// result in compilation errors.
+type UnsafeVersionServer interface {
+	mustEmbedUnimplementedVersionServer()
+}
+
+func RegisterVersionServer(s grpc.ServiceRegistrar, srv VersionServer) {
+	s.RegisterService(&Version_ServiceDesc, srv)
+}
+
+func _Version_SendVersion_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VersionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VersionServer).SendVersion(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/helloworld.Version/SendVersion",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VersionServer).SendVersion(ctx, req.(*VersionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Version_ServiceDesc is the grpc.ServiceDesc for Version service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Version_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "helloworld.Version",
+	HandlerType: (*VersionServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SendVersion",
+			Handler:    _Version_SendVersion_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
