@@ -12,3 +12,5 @@ jobs:
         run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
       - name: print tag
         run: echo ${{ env.TAG }}
+      - name: write tag to file
+        run: echo ${{ env.TAG }} > .VERSION
