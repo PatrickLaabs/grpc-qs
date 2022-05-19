@@ -24,7 +24,7 @@ jobs:
       - name: print tag
         run: echo ${{ env.TAG }}
       - name: write tag to file
-        run: echo ${{ env.TAG }} > .VERSION
+        run: echo "${{ env.TAG }}" > .VERSION
       - name: Checkout
         uses: actions/checkout@v2
         with:
