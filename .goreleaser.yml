@@ -25,6 +25,7 @@ dockers:
     - healthchecker
     - grpc_health_probe-linux-amd64
     - serverVersion.params
+    - .VERSION
 - image_templates: ["ghcr.io/patricklaabs/{{ .ProjectName }}:{{ .Version }}-arm64v8"]
   goarch: arm64
   dockerfile: Dockerfile
@@ -44,6 +45,7 @@ dockers:
     - healthchecker
     - grpc_health_probe-linux-amd64
     - serverVersion.params
+    - .VERSION
 docker_manifests:
 - name_template: ghcr.io/patricklaabs/{{ .ProjectName }}:{{ .Version }}
   image_templates:
