@@ -14,6 +14,16 @@ permissions:
   contents: write
 
 jobs:
+  write-version:
+    runs-on: ubuntu-latest
+    name: Write Version to File
+    steps:
+      - uses: actions/checkout@master
+      - name: Update version
+        uses: brettdorrans/write-version-to-file@master
+        with:
+          filename: '/.VERSION'
+          placeholder: '${VERSION}'
   goreleaser:
     runs-on: ubuntu-latest
     env:
