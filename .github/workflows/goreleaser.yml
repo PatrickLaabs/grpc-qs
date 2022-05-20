@@ -18,13 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
-    steps:
-      - name: Get the version
-        run: echo "TAG=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
-      - name: print tag
-        run: echo ${{ env.TAG }}
-      - name: write tag to file
-        run: echo "${{ env.TAG }}" > serverVersion.params
       - name: Checkout
         uses: actions/checkout@v2
         with:
