@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOCKER_CLI_EXPERIMENTAL: "enabled"
+    steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
