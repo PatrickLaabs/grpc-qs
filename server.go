@@ -66,7 +66,7 @@ func (s *server) SendVersion(ctx context.Context, in *pb.VersionRequest) (*pb.Ve
 	if err != nil {
 		log.Fatal("could not open param file", err)
 	}
-	return &pb.VersionReply{Message: "Current gRPC Server Version: " + string(f)}, nil
+	return &pb.VersionReply{Message: "Current Development gRPC Server Version: " + string(f)}, nil
 }
 
 func main() {
