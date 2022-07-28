@@ -21,6 +21,22 @@ option java_outer_classname = "HelloWorldProto";
 
 package helloworld;
 
+// Eitco Service
+service Eitco {
+  // sends hello to Eitco
+  rpc EitcoHello (EitcoRequest) returns (EitcoReply) {}
+}
+
+// The request Message for Eitco
+message EitcoRequest {
+  string name = 1;
+}
+
+// The response message for eitco
+message EitcoReply {
+  string message = 1;
+}
+
 // The greeting service definition.
 service Greeter {
   // Sends a greeting

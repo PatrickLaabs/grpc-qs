@@ -23,15 +23,17 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/PatrickLaabs/grpc-qs/healthchecker"
 	"os"
 
+	"github.com/PatrickLaabs/grpc-qs/healthchecker"
+
 	//_ "github.com/PatrickLaabs/grpc-qs/healthchecker"
+	"log"
+	"net"
+
 	pb "github.com/PatrickLaabs/grpc-qs/helloworld"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/health/grpc_health_v1"
-	"log"
-	"net"
 )
 
 var (
@@ -42,6 +44,8 @@ var (
 type server struct {
 	pb.UnimplementedGreeterServer
 	pb.UnimplementedByeServer
+	pb.UnimplementedVersionServer
+	pb.UnimplementedEitcoServer
 }
 
 // SayHello implements helloworld.GreeterServer
@@ -69,6 +73,12 @@ func (s *server) SendVersion(ctx context.Context, in *pb.VersionRequest) (*pb.Ve
 	return &pb.VersionReply{Message: "Current gRPC Server Version: " + string(f)}, nil
 }
 
+// Send Eitco Stuff
+func (s *server) SendEitcoStuff(ctx context.Context, in *pb.EitcoRequest) (*pb.EitcoReply, error) {
+	log.Printf("Received: %v", in.GetName())
+	return &pb.EitcoReply{Message: "Hallo " + in.GetName()}, nil
+}
+
 func main() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
@@ -79,6 +89,7 @@ func main() {
 	pb.RegisterGreeterServer(s, &server{})
 	pb.RegisterByeServer(s, &server{})
 	pb.RegisterVersionServer(s, &server{})
+	pb.RegisterEitcoServer(s, &server{})
 
 	healthService := healthchecker.HealthChecker{}
 	grpc_health_v1.RegisterHealthServer(s, &healthService)
