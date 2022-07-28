@@ -18,92 +18,6 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// EitcoClient is the client API for Eitco service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type EitcoClient interface {
-	// sends hello to Eitco
-	EitcoHello(ctx context.Context, in *EitcoRequest, opts ...grpc.CallOption) (*EitcoReply, error)
-}
-
-type eitcoClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewEitcoClient(cc grpc.ClientConnInterface) EitcoClient {
-	return &eitcoClient{cc}
-}
-
-func (c *eitcoClient) EitcoHello(ctx context.Context, in *EitcoRequest, opts ...grpc.CallOption) (*EitcoReply, error) {
-	out := new(EitcoReply)
-	err := c.cc.Invoke(ctx, "/helloworld.Eitco/EitcoHello", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// EitcoServer is the server API for Eitco service.
-// All implementations should embed UnimplementedEitcoServer
-// for forward compatibility
-type EitcoServer interface {
-	// sends hello to Eitco
-	EitcoHello(context.Context, *EitcoRequest) (*EitcoReply, error)
-}
-
-// UnimplementedEitcoServer should be embedded to have forward compatible implementations.
-type UnimplementedEitcoServer struct {
-}
-
-func (UnimplementedEitcoServer) EitcoHello(context.Context, *EitcoRequest) (*EitcoReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method EitcoHello not implemented")
-}
-
-// UnsafeEitcoServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to EitcoServer will
-// result in compilation errors.
-type UnsafeEitcoServer interface {
-	mustEmbedUnimplementedEitcoServer()
-}
-
-func RegisterEitcoServer(s grpc.ServiceRegistrar, srv EitcoServer) {
-	s.RegisterService(&Eitco_ServiceDesc, srv)
-}
-
-func _Eitco_EitcoHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(EitcoRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EitcoServer).EitcoHello(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/helloworld.Eitco/EitcoHello",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EitcoServer).EitcoHello(ctx, req.(*EitcoRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// Eitco_ServiceDesc is the grpc.ServiceDesc for Eitco service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var Eitco_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "helloworld.Eitco",
-	HandlerType: (*EitcoServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "EitcoHello",
-			Handler:    _Eitco_EitcoHello_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "helloworld/helloworld.proto",
-}
-
 // GreeterClient is the client API for Greeter service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
@@ -392,6 +306,90 @@ var Version_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendVersion",
 			Handler:    _Version_SendVersion_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "helloworld/helloworld.proto",
+}
+
+// EitcoClient is the client API for Eitco service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type EitcoClient interface {
+	SayEitco(ctx context.Context, in *HelloEitcoRequest, opts ...grpc.CallOption) (*HelloEitcoReply, error)
+}
+
+type eitcoClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewEitcoClient(cc grpc.ClientConnInterface) EitcoClient {
+	return &eitcoClient{cc}
+}
+
+func (c *eitcoClient) SayEitco(ctx context.Context, in *HelloEitcoRequest, opts ...grpc.CallOption) (*HelloEitcoReply, error) {
+	out := new(HelloEitcoReply)
+	err := c.cc.Invoke(ctx, "/helloworld.Eitco/SayEitco", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// EitcoServer is the server API for Eitco service.
+// All implementations should embed UnimplementedEitcoServer
+// for forward compatibility
+type EitcoServer interface {
+	SayEitco(context.Context, *HelloEitcoRequest) (*HelloEitcoReply, error)
+}
+
+// UnimplementedEitcoServer should be embedded to have forward compatible implementations.
+type UnimplementedEitcoServer struct {
+}
+
+func (UnimplementedEitcoServer) SayEitco(context.Context, *HelloEitcoRequest) (*HelloEitcoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SayEitco not implemented")
+}
+
+// UnsafeEitcoServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to EitcoServer will
+// result in compilation errors.
+type UnsafeEitcoServer interface {
+	mustEmbedUnimplementedEitcoServer()
+}
+
+func RegisterEitcoServer(s grpc.ServiceRegistrar, srv EitcoServer) {
+	s.RegisterService(&Eitco_ServiceDesc, srv)
+}
+
+func _Eitco_SayEitco_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HelloEitcoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EitcoServer).SayEitco(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/helloworld.Eitco/SayEitco",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EitcoServer).SayEitco(ctx, req.(*HelloEitcoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Eitco_ServiceDesc is the grpc.ServiceDesc for Eitco service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Eitco_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "helloworld.Eitco",
+	HandlerType: (*EitcoServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "SayEitco",
+			Handler:    _Eitco_SayEitco_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

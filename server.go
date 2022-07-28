@@ -73,10 +73,10 @@ func (s *server) SendVersion(ctx context.Context, in *pb.VersionRequest) (*pb.Ve
 	return &pb.VersionReply{Message: "Current gRPC Server Version: " + string(f)}, nil
 }
 
-// Send Eitco Stuff
-func (s *server) SendEitcoStuff(ctx context.Context, in *pb.EitcoRequest) (*pb.EitcoReply, error) {
+// SayEitco
+func (s *server) SayEitco(ctx context.Context, in *pb.HelloEitcoRequest) (*pb.HelloEitcoReply, error) {
 	log.Printf("Received: %v", in.GetName())
-	return &pb.EitcoReply{Message: "Hallo " + in.GetName()}, nil
+	return &pb.HelloEitcoReply{Message: "Eitco " + in.GetName()}, nil
 }
 
 func main() {
